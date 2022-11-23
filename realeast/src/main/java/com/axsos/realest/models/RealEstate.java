@@ -23,24 +23,21 @@ public class RealEstate {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+
 	private String proName;
 
-	@NotEmpty(message = "Description is required!")
-	@Size(min = 3, max = 30, message = "Name must be between 3 and 30 characters")
+
 	private String description;
 	
-	@NotNull
+
 	private int numberOfUnits;
 
-	@NotNull(message = "Starting price is required!")
-	@Min(value = 1, message = "Staritng price must not be empty")
+
 	private double satrtingPrice;
 
-	@NotNull(message = "Ending price is required!")
-	@Min(value = 1, message = "Ending price must not be empty")
 	private double endingPrice;
 
-	@NotNull
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "location")
 	private location address;
@@ -60,18 +57,15 @@ public class RealEstate {
 		};
 	
 	
-	@NotNull(message = "Starting area is required!")
-	@Min(value = 1, message = "Staritng area must not be empty")
+
 	private double satrtingArea;	
 	
 
-	@NotNull(message = "Ending area is required!")
-	@Min(value = 1, message = "Ending area must not be empty")
+
 	private double endingArea;
 	
 	
-	@NotNull(message = "Payment type is required!")
-	@Size(min = 3, max = 30, message = "Payment must be between 3 and 30 characters")
+
 	private String payment;
 	
     @ManyToOne(fetch = FetchType.LAZY)

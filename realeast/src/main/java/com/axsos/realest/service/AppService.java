@@ -8,12 +8,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import com.axsos.realest.models.Appoeintments;
 import com.axsos.realest.models.Company;
 import com.axsos.realest.models.Customer;
 import com.axsos.realest.models.LoginCompany;
 import com.axsos.realest.models.LoginCustomer;
 import com.axsos.realest.models.RealEstate;
 import com.axsos.realest.models.User;
+import com.axsos.realest.repository.AppointmentsRepository;
 import com.axsos.realest.repository.CompanyRepository;
 import com.axsos.realest.repository.CustomerRepository;
 import com.axsos.realest.repository.RealEstateRepository;
@@ -28,14 +30,16 @@ public class AppService {
     private CompanyRepository companyRepository;
     private RealEstateRepository realRepository;
     private CustomerRepository customerRepository;
+    private AppointmentsRepository appRepo;
     
-    public AppService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder, CompanyRepository companyRepository, RealEstateRepository realRepository, CustomerRepository customerRepository)     {
+    public AppService(AppointmentsRepository appRepo,UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder, CompanyRepository companyRepository, RealEstateRepository realRepository, CustomerRepository customerRepository)     {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.realRepository = realRepository;
         this.companyRepository = companyRepository;
         this.customerRepository = customerRepository;
+        this.appRepo =appRepo;
     }
     
     // 1
@@ -116,7 +120,9 @@ public class AppService {
         }
     }
 
-    
+    public Appoeintments createProcess(Appoeintments process) {
+    	return appRepo.save(process);
+    }
   //****** Company Registration*************//	
     public Company registerCompany(Company newCompany, BindingResult result) {
         if(companyRepository.findByLicensedOp(newCompany.getLicensedOp()).isPresent()) {
@@ -156,6 +162,16 @@ public class AppService {
     public List<RealEstate> findAllRealEstate() {
     	return realRepository.findAll();
     }
+    
+    public RealEstate findEstateById(Long id) {
+        Optional<RealEstate> r = realRepository.findById(id);
+
+        if(r.isPresent()) {
+            return r.get();
+            } else {
+            return null;
+        }
+    }
     // ********** retrieve all companies ************//
     public List<Company> findAllRCompanies() {
     	return companyRepository.findAll();
@@ -193,5 +209,13 @@ public class AppService {
             } else {
             return null;
         }
+    }
+    //*************************** search ********************//
+    public Optional<List<RealEstate>> searchEstate( String ePrice){
+    	return realRepository.findByStatus(  ePrice);
+    }
+    //********** return all company appointemnts **********
+    public List<Appoeintments> allAppointments(Company company){
+    	return appRepo.findByCompany(company);
     }
 }

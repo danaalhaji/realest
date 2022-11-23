@@ -1,6 +1,8 @@
 package com.axsos.realest.controller;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -10,10 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.axsos.realest.models.Appoeintments;
 import com.axsos.realest.models.Company;
 import com.axsos.realest.models.Customer;
 import com.axsos.realest.models.LoginCompany;
@@ -48,7 +53,7 @@ public class AppController {
 	// ************ login and registration page ************
 	@GetMapping("/registerUser")
 	public String registerUserForm(Model model) {
-		model.addAttribute("newUser", new Customer());
+		model.addAttribute("newCustomer", new Customer());
 		return "userRegister.jsp";
 	}
 
@@ -140,10 +145,48 @@ public class AppController {
 		appService.saveWithUserRole(user);
 		return "redirect:/login";
 	}
+
 	@GetMapping("/companyProperty")
-	public String companyProperty() {
+	public String companyProperty(HttpSession session, Model model) {
+		Long comID = (Long) session.getAttribute("company_id");
+		Company company = appService.findCompanyById(comID);
+		List<RealEstate> myEstates = company.getRealEstates();
+		model.addAttribute("myPro", myEstates);
 		return "companyProperty.jsp";
 	}
+
+	@GetMapping("/companyLeads")
+	public String companyLeads(HttpSession session, Model model) {
+		Long comID = (Long) session.getAttribute("company_id");
+		Company company = appService.findCompanyById(comID);
+		 List<Appoeintments> appointemnt = appService.allAppointments(company);
+		 model.addAttribute("appointemnt", appointemnt);
+		return "companyLeads.jsp";
+	}
+
+	@GetMapping("/about")
+	public String about() {
+		return "about.jsp";
+	}
+	// *************** contact page ***************
+
+	@GetMapping("/contact")
+	public String contact() {
+		return "contact.jsp";
+	}
+    @GetMapping("/book/estate/{id}")
+    public String estateBook(Model model, HttpSession session, @PathVariable("id")Long id) {
+    	RealEstate estate = appService.findEstateById(id);
+        Company company = estate.getCompany();
+        Long newCustomer = (Long) session.getAttribute("customer_id");
+        Customer thisUser = appService.findCustomerById(newCustomer);
+        Appoeintments app = new Appoeintments();
+        app.setCompany(company);
+        app.setCustomer(thisUser);
+        appService.updateReal(estate);
+        appService.createProcess(app);
+        return "redirect:/dashboard";
+    }
 
 // @PostMapping("/login")
 // public String login(@Valid @ModelAttribute("user") User user, BindingResult result, Model model, HttpSession session) {
@@ -179,6 +222,18 @@ public class AppController {
 		return "homePage.jsp";
 	}
 
+	@GetMapping("/property")
+	public String property(Model model) {
+		model.addAttribute("properties", appService.findAllRealEstate());
+		return "property.jsp";
+	}
+
+	@GetMapping("/properey/{id}")
+	public String propertyID(Model model, HttpSession session, @PathVariable("id") Long id) {
+		model.addAttribute("property", appService.findEstateById(id));
+		return "propertyDetail.jsp";
+	}
+
 	@RequestMapping("/admin")
 	public String adminPage(Principal principal, Model model) {
 		String username = principal.getName();
@@ -205,6 +260,7 @@ public class AppController {
 			return "newCompanyForm.jsp";
 		}
 		session.setAttribute("company_id", newCompany.getId());
+		model.addAttribute("company_id", session.getAttribute("company_id"));
 		return "redirect:/companies";
 	}
 
@@ -230,8 +286,7 @@ public class AppController {
 		if (result.hasErrors()) {
 			model.addAttribute("newLoginCompany", new Company());
 			return "companyLogin.jsp";
-		}
-		else{
+		} else {
 			session.setAttribute("company_id", company.getId());
 			model.addAttribute("company_id", session.getAttribute("company_id"));
 			return "redirect:/companyDashboard";
@@ -258,39 +313,74 @@ public class AppController {
 		return "addEstate.jsp";
 	}
 
-	@PostMapping("/add/project")
-	public String addProject(@Valid @ModelAttribute("newProject") RealEstate newProject, BindingResult result,
-			Model model, HttpSession session) {
+	@PostMapping("/addestate")
+	public String addProject(@ModelAttribute("newProject") RealEstate newProject, Model model, HttpSession session) {
 
-		if(session.getAttribute("company_id") == null ) {
-    		return "redirect:/logout";
-    	}
-      	else {
-    		Long comID =  (Long) session.getAttribute("company_id");
-    		Company company = appService.findCompanyById(comID);
-      		if(result.hasErrors()) {
-            model.addAttribute("newProject", new RealEstate());
-            return "addEstate.jsp";
-        }
-      		newProject.setCompany(company);
-      		appService.newProj(newProject);
-		
-		return "redirect:/companyDashboard";
+		if (session.getAttribute("company_id") == null) {
+			return "redirect:/logout";
+		} else {
+			Long comID = (Long) session.getAttribute("company_id");
+			Company company = appService.findCompanyById(comID);
+			System.out.println("hi");
+			newProject.setCompany(company);
+			appService.newProj(newProject);
+
+			return "redirect:/companyDashboard";
+		}
 	}
+
+	@PostMapping("/search/estate")
+	public String seravhBySinger(Model model, @RequestParam("status") String ePrice, HttpSession session) {
+		System.out.println("hi");
+		Optional<List<RealEstate>> songs = appService.searchEstate(ePrice);
+		System.out.println(songs);
+		System.out.println("hi");
+		return "homePage.jsp";
 	}
-	
+
 	@GetMapping("/companyDashboard")
 	public String companyDashboard(Model model, HttpSession session) {
-	if (session.getAttribute("company_id") != null) {
+		if (session.getAttribute("company_id") != null) {
 			Long company_id = (Long) session.getAttribute("company_id");
 			User thisComp = appService.findUserById(company_id);
 			model.addAttribute("projects", appService.findAllRealEstate());
 			model.addAttribute("thisComp", thisComp);
+			model.addAttribute("company_id", company_id);
 
 			return "companyLandingPage.jsp";
 		} else {
 			return "redirect:/dashboard";
 		}
-
-}
+	}
+		@GetMapping("/delete/{id}")
+		public String deleteProb(Model model, HttpSession session, @PathVariable("id")Long id) {
+				Long company_id = (Long) session.getAttribute("company_id");
+				User thisComp = appService.findUserById(company_id);
+				appService.findEstateById(id);
+				RealEstate real = appService.findEstateById(id);
+				appService.deleteReal(real);
+				return "redirect:/companyProperty";
+		}
+		@GetMapping("/edit/{id}")
+		public String editeProb(Model model, HttpSession session, @PathVariable("id")Long id
+				) {
+				Long company_id = (Long) session.getAttribute("company_id");
+				Company thisComp = appService.findCompanyById(company_id);
+				RealEstate editeProb = appService.findEstateById(id);
+				model.addAttribute("editeProb", editeProb);
+				return "companyEditeProb.jsp";
+		}
+		@PutMapping("/edit")
+		public String submitEditProb(Model model, HttpSession session,
+				@Valid @ModelAttribute("editeProb") RealEstate editeProb, BindingResult result) {
+				Long company_id = (Long) session.getAttribute("company_id");
+				Company thisComp = appService.findCompanyById(company_id);
+			       if (result.hasErrors()) {
+			            return "companyEditeProb.jsp";
+			        } else {
+			        	editeProb.setCompany(thisComp);
+			            appService.updateReal(editeProb);
+			            return "redirect:/companyProperty";
+			        }
+		}
 }

@@ -12,86 +12,86 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<base href="/">
-
 <title>Realest</title>
+<base href="/">
 <link rel="stylesheet" type="text/css" href="css/style2.css">
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
 </head>
-<body>
-<h1>Registration</h1>
-	<main class="registerForm">
+<style>
+#newProject {
+width: 50%;
+}
+</style>
+<body class="pt-3">
+	<main class="registerForm specialH">
+		<h1 class="mb-2	">Add Real Estate</h1>
 		
-		<div class="social-container">
-			<a href="https://rpbloggers.com/"><i class="fab fa-facebook-f"></i></a>
-			<a href="https://rpbloggers.com/"><i class="fab fa-google-plus-g"></i></a>
-			<a href="https://rpbloggers.com/"><i class="fab fa-linkedin-in"></i></a>
-		</div>
-    <form:form action="/add/project" method="post" modelAttribute="newProject">
-        <div class="form-group">
-            <label>Name Building:</label>
-            <form:input path="proName" class="form-control" />
-            <form:errors path="proName" class="text-danger" />
-        </div>
-        <div class="form-group">
-            <label>Description:</label>
-            <form:input path="description" class="specialInput" />
-            <form:errors path="description" class="text-danger" />
-        </div>
-        <div class="form-group">
-            <label>Number Of Units:</label>
-            <form:input path="numberOfUnits" class="specialInput" />
-            <form:errors path="numberOfUnits" class="text-danger" />
-        </div>
-        <div class="form-group">
-            <label>Starting Price:</label>
-            <form:input path="satrtingPrice" class="specialInput" />
-            <form:errors path="satrtingPrice" class="text-danger" />
-        </div>
-        <div class="form-group">
-            <label>Ending Price:</label>
-            <form:input path="endingPrice" class="specialInput" />
-            <form:errors path="endingPrice" class="text-danger" />
-        </div>
-        <div class="form-group">
-            <label>Starting Area:</label>
-            <form:input path="satrtingArea" class="specialInput" />
-            <form:errors path="satrtingArea" class="text-danger" />
-        </div>
-        <div class="form-group">
-            <label>Ending Area:</label>
-            <form:input path="endingArea" class="specialInput" />
-            <form:errors path="endingArea" class="text-danger" />
-        </div>
-        <div class="form-group">
-        <label>Payment:</label>
-        <form:select name="payment" path="payment">
-  			<form:option value="cash">Cash</form:option>
-  			<form:option value="installment">Installment</form:option>
-  			<form:errors path="payment" class="text-danger" />
-		</form:select>
-        </div>
-        
-         <div class="form-group">
-            <label>Address:</label>
-    			<form:select path="address">
-     			<form:option value="-" label="--Please Select"/>
-    		 	<form:options items="${enumValues}" />
+		
+		<form:form action="/addestate" method="post" modelAttribute="newProject">
+			<div class="form-group">
+				<form:input path="proName" class="specialInput"
+					placeholder="Estate Name" />
+				<form:errors path="proName" class="text-danger" />
+			</div class="form-group">
+			<div>
+				<form:input path="description" class="specialInput"
+					placeholder="Estate Description" />
+				<form:errors path="description" class="text-danger" />
+			</div>
+			<div class="form-group">
+				<form:input path="numberOfUnits" class="specialInput"
+					placeholder="Number of Units" />
+				<form:errors path="numberOfUnits" class="text-danger" />
+			</div>
+			<div class="form-group">
+				<form:input path="satrtingPrice" class="specialInput"
+					placeholder="Starting Price" />
+				<form:errors path="satrtingPrice" class="text-danger" />
+			</div>
+			<div class="form-group">
+				<form:input path="endingPrice" class="specialInput"
+					placeholder="Ending Price" />
+				<form:errors path="endingPrice" class="text-danger" />
+			</div>
+			<div class="form-group">
+				<form:input path="satrtingArea" class="specialInput"
+					placeholder="Starting Area" />
+				<form:errors path="satrtingArea" class="text-danger" />
+			</div>
+			<div class="form-group">
+				<form:input path="endingArea" class="specialInput"
+					placeholder="Ending Area" />
+				<form:errors path="endingArea" class="text-danger" />
+			</div>
+			<div class="form-group">
+				<form:select name="payment" path="payment" class="specialInput">
+				<label>Payment: </label>
+					<form:option value="cash">Cash</form:option>
+					<form:option value="installment">Installment</form:option>
+					<form:errors path="payment" class="text-danger" />
+				</form:select>
+			</div><div class="form-group">
+			
+			<label>Address: </label>
+				<form:select class="specialInput" path="address">
+					<form:option value="-" label="--Please Select" />
+					<form:options items="${enumValues}" />
 				</form:select>
 				<form:errors path="address" class="text-danger" />
-  		</div>
-  		 <div class="form-group">
-            <label>Status:</label>
-    			<form:select path="status">
-     			<form:option value="-" label="--Please Select"/>
-    		 	<form:options items="${enumValues}" />
+			</div>
+			<div class="form-group">
+				<label>Status: </label>
+				<form:select class="specialInput" path="status">
+					<form:option value="-" label="--Please Select" />
+					<form:options items="${enumValues}" />
 				</form:select>
 				<form:errors path="status" class="text-danger" />
-  		</div>
-        <input type="submit" value="Add A Real Estate" class="btn btn-primary" />
-    </form:form>
-</main>
+			</div>
+			<button>Add Real Estate</button>
+
+		</form:form>
+	</main>
 
 </body>
 </html>

@@ -25,7 +25,7 @@
 			<a href="https://rpbloggers.com/"><i class="fab fa-google-plus-g"></i></a>
 			<a href="https://rpbloggers.com/"><i class="fab fa-linkedin-in"></i></a>
 		</div>
-		<form:form action="/register" method="post" modelAttribute="newUser">
+		<form:form action="/register" method="post" modelAttribute="newCustomer">
 			<div>
 				<form:input path="fullName" class="specialInput"
 					placeholder="your full name" />

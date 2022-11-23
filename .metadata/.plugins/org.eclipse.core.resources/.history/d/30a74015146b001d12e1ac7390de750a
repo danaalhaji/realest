@@ -1,0 +1,85 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!-- c:out ; c:forEach etc. -->
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!-- Formatting (dates) -->
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<!-- form:form -->
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<!-- for rendering errors on PUT routes -->
+<%@ page isErrorPage="true"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Realest</title>
+<base href="/">
+<link rel="stylesheet" type="text/css" href="css/style2.css">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+</head>
+<body>
+	<main class="registerForm">
+		<h1>Add Real Estate</h1>
+		<div class="social-container">
+			<a href="https://rpbloggers.com/"><i class="fab fa-facebook-f"></i></a>
+			<a href="https://rpbloggers.com/"><i class="fab fa-google-plus-g"></i></a>
+			<a href="https://rpbloggers.com/"><i class="fab fa-linkedin-in"></i></a>
+		</div>
+		<form:form action="/edit" method="put"
+			modelAttribute="editeProb">
+			<div class="form-group">
+				<form:input path="proName" class="specialInput"
+					placeholder="Estate Name" />
+			</div class="form-group">
+			<div>
+				<form:input path="description" class="specialInput"
+					placeholder="Estate Description" />
+			</div>
+			<div class="form-group">
+				<form:input path="numberOfUnits" class="specialInput"
+					placeholder="Number of Units" />
+			</div>
+			<div class="form-group">
+				<form:input path="satrtingPrice" class="specialInput"
+					placeholder="Starting Price" />
+			</div>
+			<div class="form-group">
+				<form:input path="endingPrice" class="specialInput"
+					placeholder="Ending Price" />
+				<form:errors path="endingPrice" class="text-danger" />
+			</div>
+			<div class="form-group">
+				<form:input path="satrtingArea" class="specialInput"
+					placeholder="Starting Area" />
+			<div class="form-group">
+				<form:input path="endingArea" class="specialInput"
+					placeholder="Ending Area" />
+			</div>
+			<div class="form-group">
+				<form:select name="payment" path="payment">
+					<form:option value="cash">Cash</form:option>
+					<form:option value="installment">Installment</form:option>
+				</form:select>
+			</div>
+			<div class="form-group">
+				<form:select path="address">
+					<form:option value="location" label="--Please Select" />
+					<form:options items="${enumValues}" />
+				</form:select>
+			</div>
+			<div class="form-group">
+				<label>Status:</label>
+				<form:select path="status">
+					<form:option value="status" label="--Please Select" />
+					<form:options items="${enumValues}" />
+				</form:select>
+			</div>
+			<input type="submit" value="Add A Real Estate"
+				class="btn btn-primary" />
+
+		</form:form>
+	</main>
+
+</body>
+</html>

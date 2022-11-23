@@ -1,0 +1,21 @@
+package com.axsos.realest.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.axsos.realest.models.RealEstate;
+
+@Repository
+public interface RealEstateRepository extends CrudRepository<RealEstate, Long> {
+	List<RealEstate> findAll();
+	Optional<List<RealEstate>> findBysatrtingPriceAndEndingPrice(String starting, String ending);
+	Optional<List<RealEstate>> findBysatrtingPriceLessThan(String starting);
+	Optional<List<RealEstate>> findByPayment(String payment);
+	Optional<List<RealEstate>> findByStatus(String status);
+	Optional<List<RealEstate>> findBysatrtingAreaOrEndingAreaOrSatrtingPriceOrEndingPriceOrPaymentOrStatus(String startingA, 
+			String endingA,String starting, String ending,String payment,String status);
+	
+}

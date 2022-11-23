@@ -1,0 +1,202 @@
+package com.axsos.realest.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+
+import com.axsos.realest.models.Company;
+import com.axsos.realest.models.Customer;
+import com.axsos.realest.models.LoginCompany;
+import com.axsos.realest.models.LoginCustomer;
+import com.axsos.realest.models.RealEstate;
+import com.axsos.realest.models.User;
+import com.axsos.realest.repository.CompanyRepository;
+import com.axsos.realest.repository.CustomerRepository;
+import com.axsos.realest.repository.RealEstateRepository;
+import com.axsos.realest.repository.RoleRepository;
+import com.axsos.realest.repository.UserRepository;
+
+@Service
+public class AppService {
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private CompanyRepository companyRepository;
+    private RealEstateRepository realRepository;
+    private CustomerRepository customerRepository;
+    
+    public AppService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder, CompanyRepository companyRepository, RealEstateRepository realRepository, CustomerRepository customerRepository)     {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.realRepository = realRepository;
+        this.companyRepository = companyRepository;
+        this.customerRepository = customerRepository;
+    }
+    
+    // 1
+    public void saveWithUserRole(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRoles(roleRepository.findByName("ROLE_USER"));
+        userRepository.save(user);
+    }
+     
+     // 2 
+    public void saveUserWithAdminRole(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRoles(roleRepository.findByName("ROLE_ADMIN"));
+        userRepository.save(user);
+    }    
+    
+    // 3
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    
+    public User findUserById(Long id) {
+        Optional<User> u = userRepository.findById(id);
+
+        if(u.isPresent()) {
+            return u.get();
+            } else {
+            return null;
+        }
+    }
+    
+//****** USER Reg*************//	
+	
+    public Customer register(Customer newCustomer, BindingResult result) {
+        if(customerRepository.findByEmail(newCustomer.getEmail()).isPresent()) {
+            result.rejectValue("email", "Unique", "This email is already in use!");
+        }
+        if(!newCustomer.getPassword().equals(newCustomer.getConfirm())) {
+            result.rejectValue("confirm", "Matches", "The Confirm Password must match Password!");
+        }
+        if(result.hasErrors()) {
+            return null;
+        } else {
+            String hashed = BCrypt.hashpw(newCustomer.getPassword(), BCrypt.gensalt());
+            newCustomer.setPassword(hashed);
+            return customerRepository.save(newCustomer);
+        }
+    }
+    
+	//****** USER Login*************//	
+    
+    public Customer loginCustomer(LoginCustomer newLoginCustomer, BindingResult result) {
+        if(result.hasErrors()) {
+            return null;
+        }
+        Optional<Customer> potentialUser = customerRepository.findByEmail(newLoginCustomer.getEmail());
+        if(!potentialUser.isPresent()) {
+            result.rejectValue("email", "Unique", "Unknown email!");
+            return null;
+        }
+        Customer customer = potentialUser.get();
+        if(!BCrypt.checkpw(newLoginCustomer.getPassword(), customer.getPassword())) {
+            result.rejectValue("password", "Matches", "Invalid Password!");
+        }
+        if(result.hasErrors()) {
+            return null;
+        } else {
+            return customer;
+        }
+    }
+    public Customer findCustomerById(Long id) {
+        Optional<Customer> c = customerRepository.findById(id);
+
+        if(c.isPresent()) {
+            return c.get();
+            } else {
+            return null;
+        }
+    }
+
+    
+  //****** Company Registration*************//	
+    public Company registerCompany(Company newCompany, BindingResult result) {
+        if(companyRepository.findByLicensedOp(newCompany.getLicensedOp()).isPresent()) {
+            result.rejectValue("Licensed Operated", "Unique", "This licensed operated is already in use!");
+        }
+        if(!newCompany.getPasswordCom().equals(newCompany.getConfirmPass())) {
+            result.rejectValue("confirm", "Matches", "The Confirm Password must match Password!");
+        }
+        if(result.hasErrors()) {
+            return null;
+        } else {
+            String hashed = BCrypt.hashpw(newCompany.getPasswordCom(), BCrypt.gensalt());
+            newCompany.setPasswordCom(hashed);
+            return companyRepository.save(newCompany);
+        }
+    }
+    
+    //******* create a new real state ********
+    
+    public RealEstate newProj(RealEstate pro) {
+    	return realRepository.save(pro);
+    }
+    
+    //******* update a real estate ******
+    
+    public RealEstate updateReal(RealEstate pro) {
+    	return realRepository.save(pro);
+    }
+    
+    //*******  delete a real estate *******
+    
+    public void deleteReal(RealEstate pro) {
+    	 realRepository.delete(pro);
+    }
+    
+    //****** retrieve all real estates ******* //
+    public List<RealEstate> findAllRealEstate() {
+    	return realRepository.findAll();
+    }
+    // ********** retrieve all companies ************//
+    public List<Company> findAllRCompanies() {
+    	return companyRepository.findAll();
+    }
+    
+    public List<Customer> findAll() {
+    	return customerRepository.findAll();
+    }
+    
+  //** Company Login *//
+    public Company loginCompany(LoginCompany newLogin, BindingResult result) {
+        if(result.hasErrors()) {
+            return null;
+        }
+        Optional<Company> potentialcompany = companyRepository.findByEmailCom(newLogin.getEmailCom());
+        if(!potentialcompany.isPresent()) {
+            result.rejectValue("email", "Unique", "Unknown email!");
+            return null;
+        }
+        Company user = potentialcompany.get();
+        if(!BCrypt.checkpw(newLogin.getPasswordCom(), user.getPasswordCom())) {
+            result.rejectValue("password", "Matches", "Invalid Password!");
+        }
+        if(result.hasErrors()) {
+            return null;
+        } else {
+            return user;
+        }
+    }
+    public Company findCompanyById(Long id) {
+        Optional<Company> c = companyRepository.findById(id);
+
+        if(c.isPresent()) {
+            return c.get();
+            } else {
+            return null;
+        }
+    }
+    //*************************** search ********************//
+    public Optional<List<RealEstate>> searchEstate(String sArea, String eArea, String sPrice, String ePrice, String payment, String status){
+    	return realRepo.findBysatrtingAreaOrEndingAreaOrSatrtingPriceOrEndingPriceOrPaymentOrStatus(sArea, eArea, sPrice, ePrice, payment, status);
+    }
+    
+}

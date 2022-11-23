@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -32,16 +34,27 @@ public class Appoeintments {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    private User customer;
-    
+    private Customer customer;
     @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date appointemnt;
+    private Boolean proccess;
+//    @NotNull
+//    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+//    private Date appointemnt;
     
     
     public Appoeintments() {
-        
+        this.proccess = false;
     }
+
+
+	public Boolean getProccess() {
+		return proccess;
+	}
+
+
+	public void setProccess(Boolean proccess) {
+		this.proccess = proccess;
+	}
 
 
 	public Long getId() {
@@ -84,24 +97,31 @@ public class Appoeintments {
 	}
 
 
-	public User getCustomer() {
+	public Customer getCustomer() {
 		return customer;
 	}
 
 
-	public void setCustomer(User customer) {
+	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt = new Date();
+    }
+    @PreUpdate
+    protected void onUpdate(){
+        this.updatedAt = new Date();
+    }
 
-
-	public Date getAppointemnt() {
-		return appointemnt;
-	}
-
-
-	public void setAppointemnt(Date appointemnt) {
-		this.appointemnt = appointemnt;
-	}
+//	public Date getAppointemnt() {
+//		return appointemnt;
+//	}
+//
+//
+//	public void setAppointemnt(Date appointemnt) {
+//		this.appointemnt = appointemnt;
+//	}
     
     
 }

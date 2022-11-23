@@ -147,11 +147,13 @@
 					<li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
 					<li class="nav-item"><a class="nav-link" href="/about">About</a>
 					</li>
-					<li class="nav-item"><a class="nav-link" href="/companyProperty">My Property</a></li>
+					<li class="nav-item"><a class="nav-link" href="/companyProperty">Our Property</a></li>
+					<li class="nav-item"><a class="nav-link" href="/companyLeads">Our Leads</a></li>
 					<li class="nav-item"><a class="nav-link" href="new/project">Add Property</a>
 					</li>
-					<li class="nav-item"><c:if test="${company_id != null}">
-							<a href="/logoutcustomer" class="btn btn-dark btn-sm btn-block">Sign
+					<li class="nav-item">
+					<c:if test="${company_id != null}">
+							<a href="/logoutcustomer" class="btn btn-dark btn-sm btn-block mt-2">Sign
 								out</a>
 						</c:if></li>
 				</ul>

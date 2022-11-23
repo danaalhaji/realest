@@ -62,26 +62,26 @@
 						<div class="form-group">
 							<label for="Type">Location</label> <input type="text"
 								class="form-control form-control-lg form-control-a"
-								placeholder="Location" />
+								placeholder="Location" name="location" />
 						</div>
 					</div>
 					<div class="col-md-6 mb-2">
 						<div class="form-group">
 							<label for="Type">Starting Price</label> <input type="number"
-								class="form-control form-control-lg form-control-a"
+								class="form-control form-control-lg form-control-a"name="sPrice"
 								placeholder="Starting Price" />
 						</div>
 					</div>
 					<div class="col-md-6 mb-2">
 						<div class="form-group">
 							<label for="Type">Ending Price</label> <input type="number"
-								class="form-control form-control-lg form-control-a"
+								class="form-control form-control-lg form-control-a" name="ePrice"
 								placeholder="Ending Price" />
 						</div>
 					</div>
 					<div class="col-md-6 mb-2">
 						<div class="form-group">
-							<label for="Type">Starting Area</label> <input type="number"
+							<label for="Type">Starting Area</label> <input type="number" name="sArea"
 								class="form-control form-control-lg form-control-a"
 								placeholder="Starting Area" />
 						</div>
@@ -89,16 +89,16 @@
 					<div class="col-md-6 mb-2">
 						<div class="form-group">
 							<label for="Type">Ending Area</label> <input type="number"
-								class="form-control form-control-lg form-control-a"
+								class="form-control form-control-lg form-control-a" 
 								placeholder="Ending Area" />
 						</div>
 					</div>
 					<div class="col-md-6 mb-2">
 						<div class="form-group">
 							<label for="bathrooms">Status</label> <select
-								class="form-control form-control-lg form-control-a"
+								class="form-control form-control-lg form-control-a" name="status"
 								id="bathrooms">
-								<option>Under Construction</option>
+								<option>underConstruction</option>
 								<option>Move-in ready</option>
 							</select>
 						</div>
@@ -114,7 +114,9 @@
 						</div>
 					</div>
 					<div class="col-md-12">
-						<button type="submit" class="btn btn-b">Search Property</button>
+					<a href="/search/estate">
+						<button class="btn btn-b">Search Property</button>
+						</a>
 					</div>
 				</div>
 			</form>
@@ -190,7 +192,7 @@
 								</div>
 							</div>
 						</c:if> <c:if test="${customer_id != null}">
-							<a href="/logoutcustomer" class="btn btn-dark btn-sm btn-block">Sign
+							<a href="/logoutcustomer" class="btn btn-dark btn-sm btn-block mt-2">Sign
 								out</a>
 						</c:if></li>
 				</ul>
@@ -218,7 +220,7 @@
 								<div class="col-lg-8">
 									<div class="intro-body">
 										<h2 class="intro-title mb-4">
-											<span class="color-b">Realest</span><br /> Project1 Name
+											<span class="color-b"> Realest</span><br />“The Evolution of Luxury Starts Here” 
 										</h2>
 									</div>
 								</div>
@@ -237,7 +239,7 @@
 								<div class="col-lg-8">
 									<div class="intro-body">
 										<h1 class="intro-title mb-4">
-											<span class="color-b">Realest</span><br /> project2 name
+											<span class="color-b">Realest</span><br /> “Move to What Moves You”
 										</h1>
 									</div>
 								</div>
@@ -256,7 +258,7 @@
 								<div class="col-lg-8">
 									<div class="intro-body">
 										<h1 class="intro-title mb-4">
-											<span class="color-b">Realest</span><br /> project3 name
+											<span class="color-b">Realest</span><br /> “Where Dreams Come Home”
 										</h1>
 									</div>
 								</div>

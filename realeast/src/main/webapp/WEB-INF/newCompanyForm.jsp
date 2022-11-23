@@ -20,9 +20,9 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
 </head>
 <body>
-<h1>Registration</h1>
+
 	<main class="registerForm">
-		
+		<h1>Add new partner!</h1>
 		<div class="social-container">
 			<a href="https://rpbloggers.com/"><i class="fab fa-facebook-f"></i></a>
 			<a href="https://rpbloggers.com/"><i class="fab fa-google-plus-g"></i></a>

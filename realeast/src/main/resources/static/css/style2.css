@@ -11,6 +11,9 @@
 	box-sizing: border-box;
 }
 
+#newCompany {
+	width: 50%;
+}
 body {
 	background: #EDEDEE;
 	display: flex;
@@ -160,4 +163,8 @@ button.signup_btn {
 }
 .social-container a:hover{
 	transform: scale(1.08);
+}
+
+.specialH {
+	height: 800px;
 }
